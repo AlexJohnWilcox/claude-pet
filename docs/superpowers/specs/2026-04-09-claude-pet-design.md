@@ -23,7 +23,8 @@ claude-pet/
 │       ├── designer.py          # Textual TUI for pet creation/customization
 │       ├── models.py            # pet state, XP calculation, leveling logic
 │       ├── ascii_art.py         # species ASCII templates + rendering with accessories/colors
-│       └── personality.py       # species voice lines, mood logic, thought bubbles
+│       ├── personality.py       # species voice lines, mood logic, thought bubbles
+│       └── terminal.py          # platform detection + auto-open new terminal window
 ├── pyproject.toml
 └── README.md
 ```
@@ -34,7 +35,7 @@ claude-pet/
 
 2. **MCP Server** (`server.py`) — Python process running via the MCP protocol. Exposes tools that Claude calls. Reads and writes pet state to disk.
 
-3. **Textual TUI** (`designer.py`) — launched by the `pet_design` tool. Opens in a separate terminal window for the pet creation/customization experience. Level-gated: only shows options the user has unlocked.
+3. **Textual TUI** (`designer.py`) — launched by the `pet_design` tool. Auto-opens a new terminal window (detects platform: gnome-terminal/kitty/alacritty on Linux, Terminal.app/iTerm2 on macOS, cmd on Windows). The TUI handles both first-time creation and ongoing customization. Level-gated: only shows options the user has unlocked. When the user saves and exits, the TUI writes to `pet.json` and the MCP server picks up the changes on the next tool call.
 
 ### State Persistence
 
@@ -137,17 +138,22 @@ Returns detailed statistics: level, total XP, XP to next level, all-time stats (
 
 ### `pet_design`
 
-Launches the Textual TUI in a separate terminal for pet creation or customization. Only shows options the user has unlocked at their current level. If no pet exists, starts the full creation flow (species -> appearance -> name). If a pet exists, opens the customization screen with current selections.
+Auto-opens a new terminal window and launches the Textual TUI for pet creation or customization. Detects the user's platform and terminal emulator:
+- **Linux:** tries kitty, alacritty, gnome-terminal, x-terminal-emulator (in order)
+- **macOS:** tries iTerm2, then Terminal.app
+- **Windows:** uses `start cmd /c`
 
-Species selection is permanent — cannot be changed without a full reset (`claude-pet reset` CLI command).
+If no pet exists, starts the full creation flow (species -> appearance -> name). If a pet exists, opens the customization screen with current selections. Only shows options the user has unlocked at their current level.
+
+Species selection is permanent — cannot be changed without a full reset (`claude-pet reset` CLI command). Name can be changed at any time from the TUI.
 
 ## Pet Designer TUI
 
 ### Screen 1: Species Selection (first-time only)
 
-Arrow keys to navigate a list of 10 species. Live ASCII preview updates as user browses. Enter to confirm. This choice is permanent.
+Arrow keys to navigate a list of 9 species. Live ASCII preview updates as user browses. Enter to confirm. This choice is permanent.
 
-**Species:** Cat, Dog, Fox, Rabbit, Frog, Dragon, Penguin, Owl, Snake, Axolotl
+**Species:** Cat, Dog, Fox, Rabbit, Frog, Penguin, Owl, Snake, Axolotl
 
 ### Screen 2: Appearance Customization
 
@@ -165,9 +171,9 @@ Split-pane layout: left side has dropdown selectors, right side shows live ASCII
 
 Locked options appear grayed out with the required level shown, so the user can see what they're working toward.
 
-### Screen 3: Name Input (first-time only)
+### Screen 3: Name Input
 
-Text input field. Final preview of the pet with all selections. Enter to save, Esc to go back.
+Text input field. Final preview of the pet with all selections. Enter to save, Esc to go back. On first-time creation this is required. On subsequent visits, the current name is pre-filled and editable — the user can rename their pet at any time.
 
 ## Leveling System
 
@@ -223,7 +229,6 @@ Each species has a distinct voice for vocalizations and thought bubbles.
 | Fox | *yip!*, *chirp!* | Clever, sly, a bit mischievous |
 | Rabbit | *thump*, *squeak!* | Shy, gentle, cautious |
 | Frog | *ribbit*, *croak!* | Chill, zen, philosophical |
-| Dragon | *grr*, *roar!*, *snort* | Dramatic, noble, grandiose |
 | Penguin | *honk!*, *squawk!* | Formal, polite, a bit stiff |
 | Owl | *hoot!*, *who!* | Wise, measured, cryptic |
 | Snake | *hisss*, *sss!* | Smooth, calculating, dry wit |
@@ -243,7 +248,9 @@ Always loaded in Claude's context. Instructs Claude to:
 
 ### Command: `/pet`
 
-Slash command that tells Claude to call `show_pet` and display the full pet view with stats.
+The single entry point for all pet interaction. When invoked:
+- **No pet exists yet:** Claude calls `pet_design` to auto-open the TUI in a new terminal for first-time creation. After the user saves and closes, Claude calls `show_pet` to greet them with their new pet.
+- **Pet exists:** Claude calls `pet_design` to open the TUI for viewing/customizing (stats, XP bar, level progress, and unlocked customization options are all visible in the TUI). After the user closes it, Claude acknowledges any changes.
 
 ## Distribution
 
