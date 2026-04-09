@@ -55,6 +55,8 @@ class SpeciesScreen(Screen):
                 id="species-list",
             )
             yield AsciiPreview(id="preview")
+        with Horizontal(id="button-bar"):
+            yield Button("Continue", variant="primary", id="continue-btn")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -72,8 +74,13 @@ class SpeciesScreen(Screen):
     def species_selected(self, event: ListView.Selected) -> None:
         if event.item and event.item.name:
             self.selected_species = event.item.name
-            self.app.selected_species = self.selected_species
-            self.app.push_screen(CustomizeScreen())
+            preview = self.query_one("#preview", AsciiPreview)
+            preview.update_preview(self.selected_species)
+
+    @on(Button.Pressed, "#continue-btn")
+    def continue_pressed(self) -> None:
+        self.app.selected_species = self.selected_species
+        self.app.push_screen(CustomizeScreen())
 
     def action_quit(self) -> None:
         self.app.exit()
