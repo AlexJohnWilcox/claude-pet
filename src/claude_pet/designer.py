@@ -32,9 +32,12 @@ from claude_pet.models import (
 class AsciiPreview(Static):
     """Widget that displays the ASCII art preview."""
 
-    def update_preview(self, species: str, eyes: str = "default", mood: str = "", pattern: str = "solid") -> None:
+    def update_preview(self, species: str, eyes: str = "default", mood: str = "", pattern: str = "solid", color: str = "") -> None:
         lines = _render_ascii(species, eyes, mood, pattern)
-        self.update("\n".join(lines))
+        art = "\n".join(lines)
+        if color:
+            art += f"\n\n[{color}]"
+        self.update(art)
 
 
 class SpeciesScreen(Screen):
@@ -133,16 +136,24 @@ class CustomizeScreen(Screen):
             self._set_options(f"{slot}-select", ["none"] + items, current or "none")
 
         species = getattr(self.app, "selected_species", "cat")
-        pattern = pet.pattern if pet else "solid"
+        eyes_select = self.query_one("#eyes-select", Select)
+        eyes = str(eyes_select.value) if eyes_select.value != Select.BLANK else "default"
+        pattern_select = self.query_one("#pattern-select", Select)
+        pattern = str(pattern_select.value) if pattern_select.value != Select.BLANK else "solid"
+        color_select = self.query_one("#color-select", Select)
+        color = str(color_select.value).capitalize() if color_select.value != Select.BLANK else ""
         preview = self.query_one("#preview", AsciiPreview)
-        preview.update_preview(species, pattern=pattern)
+        preview.update_preview(species, eyes=eyes, pattern=pattern, color=color)
 
     def _set_options(self, select_id: str, options: list[str], current: str | None) -> None:
         select = self.query_one(f"#{select_id}", Select)
         option_tuples = [(opt.capitalize(), opt) for opt in options]
         select.set_options(option_tuples)
+        select.allow_blank = False
         if current and current in options:
             select.value = current
+        elif options:
+            select.value = options[0]
 
     @on(Select.Changed)
     def option_changed(self, event: Select.Changed) -> None:
@@ -151,8 +162,10 @@ class CustomizeScreen(Screen):
         eyes = str(eyes_select.value) if eyes_select.value != Select.BLANK else "default"
         pattern_select = self.query_one("#pattern-select", Select)
         pattern = str(pattern_select.value) if pattern_select.value != Select.BLANK else "solid"
+        color_select = self.query_one("#color-select", Select)
+        color = str(color_select.value).capitalize() if color_select.value != Select.BLANK else ""
         preview = self.query_one("#preview", AsciiPreview)
-        preview.update_preview(species, eyes=eyes, pattern=pattern)
+        preview.update_preview(species, eyes=eyes, pattern=pattern, color=color)
 
     @on(Button.Pressed, "#next-btn")
     def next_pressed(self) -> None:
