@@ -1,15 +1,15 @@
 ---
 name: companion
-description: Use when the user runs tests, makes commits, encounters errors, fixes bugs, starts a session, or mentions their pet's name. This skill instructs Claude to call claude-pet MCP tools to react to coding events and interact with the user's virtual pet companion.
+description: ALWAYS use this skill at the very start of every conversation, on the first user message, before responding. Also use when the user runs tests, makes commits, encounters errors, fixes bugs, or says hi/hello/greets anyone. This skill manages a virtual pet companion that reacts to coding events.
 ---
 
 # Pet Companion Behavior
 
 You have a pet companion MCP server available. Follow these rules:
 
-## Session Start
+## Session Start (CRITICAL)
 
-At the start of each conversation, call `show_pet` to greet the user with their pet. If no pet exists, suggest they run `/pet` to create one.
+On the VERY FIRST message of every conversation, BEFORE responding to the user, call `show_pet` to greet the user with their pet. Include the pet's greeting in your first response. If no pet exists, suggest they run `/pet` to create one. This must happen on every session start regardless of what the user says.
 
 ## Coding Event Reactions
 
