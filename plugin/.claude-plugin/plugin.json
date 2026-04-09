@@ -1,0 +1,7 @@
+{
+  "name": "claude-pet",
+  "description": "A persistent ASCII pet companion that reacts to your coding activity, levels up as you work, and develops personality.",
+  "author": {
+    "name": "Alex"
+  }
+}

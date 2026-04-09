@@ -1,0 +1,6 @@
+{
+  "claude-pet": {
+    "command": "uvx",
+    "args": ["--from", "git+https://github.com/AlexJohnWilcox/claude-pet.git", "claude-pet", "serve"]
+  }
+}
