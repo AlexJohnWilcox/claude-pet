@@ -1,0 +1,6 @@
+{
+  "claude-pet": {
+    "command": "uvx",
+    "args": ["claude-pet", "serve"]
+  }
+}

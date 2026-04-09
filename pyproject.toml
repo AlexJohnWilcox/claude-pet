@@ -1,0 +1,18 @@
+[project]
+name = "claude-pet"
+version = "0.1.0"
+description = "A Claude Code plugin that gives you a persistent, customizable ASCII pet companion"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mcp[cli]>=1.2.0",
+    "textual>=0.80.0",
+    "rich>=13.0.0",
+]
+
+[project.scripts]
+claude-pet = "claude_pet.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
