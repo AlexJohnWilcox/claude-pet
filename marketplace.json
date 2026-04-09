@@ -13,7 +13,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/AlexJohnWilcox/claude-pet.git",
-        "sha": "f96d07bc9386abc357b43fc3917feda24d75e816"
+        "sha": "98d959025278e78d13238598ea4e25aa27704a09"
       },
       "homepage": "https://github.com/AlexJohnWilcox/claude-pet"
     }
