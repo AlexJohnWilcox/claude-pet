@@ -4,10 +4,9 @@ A Claude Code plugin that gives you a persistent, customizable ASCII pet compani
 
 ## Install
 
-Add via `/plugins` in Claude Code, or manually:
-
-1. Clone this repo
-2. In Claude Code, run `/plugins` and add the path to this directory
+```
+claude plugins install AlexJohnWilcox/claude-pet
+```
 
 ## Features
 
@@ -39,14 +38,6 @@ You earn XP by coding:
 | Return from break | +5 |
 
 Level up to unlock new colors, eye styles, patterns, accessories, and more. Max level: 20.
-
-## CLI
-
-You can also use `claude-pet` directly:
-
-- `claude-pet design` — Open the pet designer TUI
-- `claude-pet show` — Print your pet to the terminal
-- `claude-pet reset` — Start over with a new pet
 
 ## Requirements
 
