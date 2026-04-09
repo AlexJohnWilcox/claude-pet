@@ -42,5 +42,6 @@ Level up to unlock new colors, eye styles, patterns, accessories, and more. Max 
 
 ## Requirements
 
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+- [uv](https://docs.astral.sh/uv/getting-started/installation/) — install with `curl -LsSf https://astral.sh/uv/install.sh | sh`
 - Python 3.10+
-- uv/uvx
