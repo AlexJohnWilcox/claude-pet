@@ -48,9 +48,13 @@ def build_launch_command(terminal: str, command: str) -> list[str]:
         return ["sh", "-c", command]
 
 
+GIT_INSTALL_URL = "git+https://github.com/AlexJohnWilcox/claude-pet.git"
+
+
 def open_designer_in_terminal() -> bool:
     terminal = detect_terminal()
-    command = build_launch_command(terminal, "uvx claude-pet design")
+    cmd = f'uvx --from "{GIT_INSTALL_URL}" claude-pet design'
+    command = build_launch_command(terminal, cmd)
     try:
         subprocess.Popen(command, start_new_session=True)
         return True
