@@ -1,6 +1,6 @@
 ---
 description: Open your pet companion — design, view, and customize your ASCII pet
-allowed-tools: [mcp__claude-pet__pet_design, mcp__claude-pet__show_pet]
+allowed-tools: [mcp__plugin_claude-pet_claude-pet__pet_design, mcp__plugin_claude-pet_claude-pet__show_pet]
 ---
 
 # /pet Command
