@@ -32,11 +32,23 @@ from claude_pet.models import (
 class AsciiPreview(Static):
     """Widget that displays the ASCII art preview."""
 
+    COLOR_MAP = {
+        "white": "#ffffff",
+        "gray": "#aaaaaa",
+        "black": "#666666",
+        "orange": "#ff8c00",
+        "brown": "#8b4513",
+        "golden": "#ffd700",
+        "blue": "#4a9eff",
+        "purple": "#9b59b6",
+    }
+
     def update_preview(self, species: str, eyes: str = "default", mood: str = "", pattern: str = "solid", color: str = "") -> None:
         lines = _render_ascii(species, eyes, mood, pattern)
         art = "\n".join(lines)
-        if color:
-            art += f"\n\n[{color}]"
+        color_hex = self.COLOR_MAP.get(color.lower(), "")
+        if color_hex:
+            art = f"[{color_hex}]{art}[/]"
         self.update(art)
 
 
