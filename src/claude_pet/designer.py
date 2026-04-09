@@ -5,7 +5,7 @@ from __future__ import annotations
 from textual import on
 from textual.app import App, ComposeResult
 from textual.binding import Binding
-from textual.containers import Horizontal, Vertical
+from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.screen import Screen
 from textual.widgets import (
     Button,
@@ -88,14 +88,22 @@ class CustomizeScreen(Screen):
         yield Header(show_clock=False)
         yield Label("Customize Appearance", id="title")
         with Horizontal(id="customize-layout"):
-            with Vertical(id="options-panel"):
+            with VerticalScroll(id="options-panel"):
+                yield Label("Color:")
                 yield Select([], id="color-select", prompt="Color")
+                yield Label("Eyes:")
                 yield Select([], id="eyes-select", prompt="Eyes")
+                yield Label("Pattern:")
                 yield Select([], id="pattern-select", prompt="Pattern")
+                yield Label("Hat:")
                 yield Select([], id="hat-select", prompt="Hat")
+                yield Label("Scarf:")
                 yield Select([], id="scarf-select", prompt="Scarf")
+                yield Label("Collar:")
                 yield Select([], id="collar-select", prompt="Collar")
+                yield Label("Glasses:")
                 yield Select([], id="glasses-select", prompt="Glasses")
+                yield Label("Cape:")
                 yield Select([], id="cape-select", prompt="Cape")
             yield AsciiPreview(id="preview")
         with Horizontal(id="button-bar"):
@@ -166,13 +174,14 @@ class NameScreen(Screen):
     def compose(self) -> ComposeResult:
         yield Header(show_clock=False)
         yield Label("Name Your Pet!", id="title")
-        yield AsciiPreview(id="preview")
-        yield Input(
-            placeholder="Enter a name...",
-            id="name-input",
-        )
-        with Horizontal(id="button-bar"):
-            yield Button("Save & Exit", variant="primary", id="save-btn")
+        with Horizontal(id="name-layout"):
+            yield AsciiPreview(id="preview")
+            with Vertical(id="name-panel"):
+                yield Input(
+                    placeholder="Enter a name...",
+                    id="name-input",
+                )
+                yield Button("Save & Exit", variant="primary", id="save-btn")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -227,7 +236,7 @@ class PetDesignerApp(App):
         margin: 1 0;
         width: 100%;
     }
-    #species-layout, #customize-layout {
+    #species-layout, #customize-layout, #name-layout {
         height: 1fr;
         margin: 1 2;
     }
@@ -237,25 +246,41 @@ class PetDesignerApp(App):
     }
     #preview {
         width: 1fr;
-        height: 100%;
+        height: auto;
+        max-height: 12;
         content-align: center middle;
-        padding: 2 4;
+        padding: 1 4;
     }
     #options-panel {
         width: 40;
         height: 100%;
         padding: 1 2;
     }
+    #options-panel Label {
+        margin-top: 1;
+        color: $text-muted;
+    }
     #options-panel Select {
-        margin-bottom: 1;
+        margin-bottom: 0;
     }
     #button-bar {
         height: 3;
         align: center middle;
         margin: 1 0;
     }
+    #name-layout {
+        height: auto;
+    }
+    #name-panel {
+        width: 1fr;
+        height: auto;
+        padding: 2 4;
+    }
     #name-input {
-        margin: 1 4;
+        margin: 1 0;
+    }
+    #save-btn {
+        margin: 1 0;
     }
     """
 

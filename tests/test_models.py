@@ -97,11 +97,11 @@ def test_reset_pet(tmp_path):
 def test_get_unlocks_at_level():
     unlocks = get_unlocks_at_level(1)
     assert "colors" in unlocks
-    assert set(unlocks["colors"]) == {"white", "gray"}
+    assert set(unlocks["colors"]) == {"white", "gray", "black"}
 
     unlocks = get_unlocks_at_level(2)
     assert "colors" in unlocks
-    assert set(unlocks["colors"]) == {"orange", "black", "brown"}
+    assert set(unlocks["colors"]) == {"orange", "brown"}
 
 
 def test_get_all_unlocked():
@@ -109,7 +109,8 @@ def test_get_all_unlocked():
     assert "white" in unlocked["colors"]
     assert "gray" in unlocked["colors"]
     assert "orange" in unlocked["colors"]
-    assert "cute" in unlocked["eyes"]
+    assert "cute" in unlocked["eyes"]  # now at level 1
+    assert "sleepy" in unlocked["eyes"]  # now at level 3
 
 
 def test_pet_level_cap():
