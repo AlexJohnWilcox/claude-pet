@@ -10,11 +10,7 @@
       "name": "claude-pet",
       "description": "A persistent ASCII pet companion that reacts to your coding activity, levels up as you work, and develops personality.",
       "category": "productivity",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/AlexJohnWilcox/claude-pet.git",
-        "sha": "98d959025278e78d13238598ea4e25aa27704a09"
-      },
+      "source": ".",
       "homepage": "https://github.com/AlexJohnWilcox/claude-pet"
     }
   ]
