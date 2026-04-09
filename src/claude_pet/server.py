@@ -91,7 +91,7 @@ def handle_pet_talk(message: str, data_dir: Path = DEFAULT_DATA_DIR) -> str:
     lines = _render_ascii(pet.species, pet.eyes, pet.mood, pet.pattern)
     art = "\n".join(f"  {line}" for line in lines)
 
-    return f"{art}  {vocalization}\n\n  {thought}"
+    return f"```\n{art}  {vocalization}\n```\n\n{thought}"
 
 
 def handle_pet_stats(data_dir: Path = DEFAULT_DATA_DIR) -> str:

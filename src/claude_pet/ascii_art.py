@@ -190,7 +190,7 @@ def render_pet_compact(pet: "PetData", event_text: str = "") -> str:
     info = f"{pet.name} (Lv{pet.level}) {bar}"
     if event_text:
         info += f" {event_text}"
-    return f" {top_line.strip()} {info}\n{face_line.strip()}"
+    return f"```\n {top_line.strip()} {info}\n {face_line.strip()}\n```"
 
 
 def render_pet_full(pet: "PetData | None") -> str:
@@ -239,4 +239,4 @@ def render_pet_full(pet: "PetData | None") -> str:
         art_part = lines[i] if i < len(lines) else ""
         info_part = info_lines[i] if i < len(info_lines) else ""
         result_lines.append(f"  {art_part:<{art_width}} {info_part}")
-    return "\n".join(result_lines)
+    return "```\n" + "\n".join(result_lines) + "\n```"
