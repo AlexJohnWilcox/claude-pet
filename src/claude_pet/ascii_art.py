@@ -118,13 +118,57 @@ def get_species_template(species: str) -> str:
     return "\n".join(lines)
 
 
-def _render_ascii(species: str, eyes: str, mood: str) -> list[str]:
+PATTERN_OVERLAYS = {
+    "solid": {},
+    "tabby": {
+        "cat": [None, None, " >~^~< ", " /|~|\\", None],
+        "dog": [None, None, None, "  /|~~|\\", None],
+        "fox": [None, None, None, "  |~||~|", None],
+    },
+    "spotted": {
+        "cat": [None, None, " >•^•< ", None, None],
+        "dog": [None, None, "  ( •w• )", None, None],
+        "fox": [None, None, " ( •w•)", None, None],
+    },
+    "striped": {
+        "cat": [None, None, " >=^=< ", " /|=|\\", None],
+        "dog": [None, None, None, "  /|==|\\", None],
+        "fox": [None, None, None, "  |=||=|", None],
+    },
+    "tuxedo": {
+        "cat": [None, None, None, " /|█|\\", "(█| |█)"],
+        "dog": [None, None, None, "  /|██|\\", " (█|  |█)"],
+    },
+    "calico": {
+        "cat": [None, None, " >∘^∘< ", " /|∘|\\", None],
+    },
+}
+
+
+def _apply_pattern(lines: list[str], species: str, pattern: str) -> list[str]:
+    """Apply pattern overlay to rendered ASCII lines."""
+    if pattern == "solid" or pattern not in PATTERN_OVERLAYS:
+        return lines
+    species_overlays = PATTERN_OVERLAYS[pattern].get(species)
+    if not species_overlays:
+        return lines
+    result = []
+    for i, line in enumerate(lines):
+        if i < len(species_overlays) and species_overlays[i] is not None:
+            result.append(species_overlays[i])
+        else:
+            result.append(line)
+    return result
+
+
+def _render_ascii(species: str, eyes: str, mood: str, pattern: str = "solid") -> list[str]:
     if mood in MOOD_EYES:
         eye_str = MOOD_EYES[mood]
     else:
         eye_str = render_eyes(eyes)
     lines = SPECIES_TEMPLATES.get(species, SPECIES_TEMPLATES["cat"])
-    return [line.replace("{eyes}", eye_str) for line in lines]
+    rendered = [line.replace("{eyes}", eye_str) for line in lines]
+    return _apply_pattern(rendered, species, pattern)
 
 
 def xp_bar(current: int, total: int, width: int = 16) -> str:
@@ -137,7 +181,7 @@ def xp_bar(current: int, total: int, width: int = 16) -> str:
 
 
 def render_pet_compact(pet: "PetData", event_text: str = "") -> str:
-    lines = _render_ascii(pet.species, pet.eyes, pet.mood)
+    lines = _render_ascii(pet.species, pet.eyes, pet.mood, pet.pattern)
     progress, needed = pet.xp_progress()
     bar = xp_bar(progress, needed, width=10)
     top_line = lines[0] if lines else ""
@@ -151,7 +195,7 @@ def render_pet_compact(pet: "PetData", event_text: str = "") -> str:
 def render_pet_full(pet: "PetData | None") -> str:
     if pet is None:
         return "No pet found! Run 'claude-pet design' to create one."
-    lines = _render_ascii(pet.species, pet.eyes, pet.mood)
+    lines = _render_ascii(pet.species, pet.eyes, pet.mood, pet.pattern)
     progress, needed = pet.xp_progress()
     color_str = pet.color.capitalize()
     pattern_str = f" {pet.pattern.capitalize()}" if pet.pattern != "solid" else ""

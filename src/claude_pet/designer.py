@@ -32,8 +32,8 @@ from claude_pet.models import (
 class AsciiPreview(Static):
     """Widget that displays the ASCII art preview."""
 
-    def update_preview(self, species: str, eyes: str = "default", mood: str = "idle") -> None:
-        lines = _render_ascii(species, eyes, mood)
+    def update_preview(self, species: str, eyes: str = "default", mood: str = "idle", pattern: str = "solid") -> None:
+        lines = _render_ascii(species, eyes, mood, pattern)
         self.update("\n".join(lines))
 
 
@@ -126,8 +126,9 @@ class CustomizeScreen(Screen):
             self._set_options(f"{slot}-select", ["none"] + items, current or "none")
 
         species = getattr(self.app, "selected_species", "cat")
+        pattern = pet.pattern if pet else "solid"
         preview = self.query_one("#preview", AsciiPreview)
-        preview.update_preview(species)
+        preview.update_preview(species, pattern=pattern)
 
     def _set_options(self, select_id: str, options: list[str], current: str | None) -> None:
         select = self.query_one(f"#{select_id}", Select)
@@ -141,8 +142,10 @@ class CustomizeScreen(Screen):
         species = getattr(self.app, "selected_species", "cat")
         eyes_select = self.query_one("#eyes-select", Select)
         eyes = str(eyes_select.value) if eyes_select.value != Select.BLANK else "default"
+        pattern_select = self.query_one("#pattern-select", Select)
+        pattern = str(pattern_select.value) if pattern_select.value != Select.BLANK else "solid"
         preview = self.query_one("#preview", AsciiPreview)
-        preview.update_preview(species, eyes=eyes)
+        preview.update_preview(species, eyes=eyes, pattern=pattern)
 
     @on(Button.Pressed, "#next-btn")
     def next_pressed(self) -> None:
@@ -187,8 +190,9 @@ class NameScreen(Screen):
     def on_mount(self) -> None:
         species = getattr(self.app, "selected_species", "cat")
         eyes = getattr(self.app, "pet_eyes", "default")
+        pattern = getattr(self.app, "pet_pattern", "solid")
         preview = self.query_one("#preview", AsciiPreview)
-        preview.update_preview(species, eyes=eyes)
+        preview.update_preview(species, eyes=eyes, pattern=pattern)
 
         pet = getattr(self.app, "_editing_pet", None)
         if pet:
