@@ -5,7 +5,8 @@ A Claude Code plugin that gives you a persistent, customizable ASCII pet compani
 ## Install
 
 ```
-claude plugins install AlexJohnWilcox/claude-pet
+claude plugins marketplace add AlexJohnWilcox/claude-pet
+claude plugins install claude-pet
 ```
 
 ## Features
