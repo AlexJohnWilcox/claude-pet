@@ -2,6 +2,12 @@
 
 A Claude Code plugin that gives you a persistent, customizable ASCII pet companion. Your pet reacts to your coding activity, levels up as you work, and develops its own personality.
 
+## Requirements
+
+```
+curl -LsSf https://astral.sh/uv/install.sh | sh && uv python install 3.12
+```
+
 ## Install
 
 ```
@@ -40,8 +46,3 @@ You earn XP by coding:
 
 Level up to unlock new colors, eye styles, patterns, accessories, and more. Max level: 20.
 
-## Requirements
-
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
-- [uv](https://docs.astral.sh/uv/getting-started/installation/) — install with `curl -LsSf https://astral.sh/uv/install.sh | sh`
-- Python 3.10+
