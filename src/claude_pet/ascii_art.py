@@ -166,7 +166,10 @@ def _render_ascii(species: str, eyes: str, mood: str = "", pattern: str = "solid
         eye_str = render_eyes(eyes)
     lines = SPECIES_TEMPLATES.get(species, SPECIES_TEMPLATES["cat"])
     rendered = [line.replace("{eyes}", eye_str) for line in lines]
-    return _apply_pattern(rendered, species, pattern)
+    rendered = _apply_pattern(rendered, species, pattern)
+    # Pad all lines to the same width so they align consistently
+    width = max(len(line) for line in rendered) if rendered else 0
+    return [line.ljust(width) for line in rendered]
 
 
 def xp_bar(current: int, total: int, width: int = 16) -> str:
