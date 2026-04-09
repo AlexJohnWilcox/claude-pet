@@ -167,8 +167,15 @@ def _render_ascii(species: str, eyes: str, mood: str = "", pattern: str = "solid
     lines = SPECIES_TEMPLATES.get(species, SPECIES_TEMPLATES["cat"])
     rendered = [line.replace("{eyes}", eye_str) for line in lines]
     rendered = _apply_pattern(rendered, species, pattern)
-    # Pad all lines to the same width so they align consistently
-    width = max(len(line) for line in rendered) if rendered else 0
+    # Pad all lines to uniform width with consistent left margin
+    if not rendered:
+        return rendered
+    width = max(len(line) for line in rendered)
+    # Ensure every line has at least 1 leading space so nothing starts at column 0
+    needs_pad = any(line and not line[0].isspace() for line in rendered)
+    if needs_pad:
+        rendered = [" " + line for line in rendered]
+        width += 1
     return [line.ljust(width) for line in rendered]
 
 
