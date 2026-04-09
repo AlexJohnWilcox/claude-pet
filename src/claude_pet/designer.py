@@ -32,7 +32,7 @@ from claude_pet.models import (
 class AsciiPreview(Static):
     """Widget that displays the ASCII art preview."""
 
-    def update_preview(self, species: str, eyes: str = "default", mood: str = "idle", pattern: str = "solid") -> None:
+    def update_preview(self, species: str, eyes: str = "default", mood: str = "", pattern: str = "solid") -> None:
         lines = _render_ascii(species, eyes, mood, pattern)
         self.update("\n".join(lines))
 

@@ -159,8 +159,8 @@ def _apply_pattern(lines: list[str], species: str, pattern: str) -> list[str]:
     return result
 
 
-def _render_ascii(species: str, eyes: str, mood: str, pattern: str = "solid") -> list[str]:
-    if mood in MOOD_EYES:
+def _render_ascii(species: str, eyes: str, mood: str = "", pattern: str = "solid") -> list[str]:
+    if mood and mood in MOOD_EYES:
         eye_str = MOOD_EYES[mood]
     else:
         eye_str = render_eyes(eyes)
